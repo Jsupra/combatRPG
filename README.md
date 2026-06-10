@@ -15,13 +15,13 @@ Tu dois créer un système de combat pour un RPG simplifié. Les différents per
 
 ### Comportements attendus :
 - **Guerrier** : attaque normale (dégâts fixes) + coup spécial (rage) qui augmente les dégâts
-- **Magicien** : attaque faible, mais peut lancer un sort coûteux (beaucoup de dégâts)
+- **Magicien** : attaque faible mais peut lancer un sort coûteux (beaucoup de dégâts)
 - **Archer** : attaque moyenne avec probabilité de coup critique
 - **Chevalier** : peut bloquer les attaques (réduit les dégâts reçus)
 
 Tous les personnages ont :
 - Une santé (HP)
-- Un mana/énergie pour les attaques spéciales
+- Une mana/énergie pour les attaques spéciales
 - Une capacité à attaquer et subir des dégâts
 
 ---
@@ -31,137 +31,64 @@ Tous les personnages ont :
 ### 1. Classe abstraite `Personnage`
 C'est le **contrat de base** pour tous les combattants.
 
-```java
-public abstract class Personnage {
-    // Attributs communs à tous les personnages
-    protected String nom;
-    protected int sante;
-    protected int santeMaX;
-    protected int mana;
-    protected int manaMaX;
-    protected int force; // dégâts de base
-    
-    // Constructeur
-    public Personnage(String nom, int sante, int mana, int force) {
-        // À implémenter
-    }
-    
-    // Méthodes abstraites - CHAQUE sous-classe DOIT les implémenter
-    public abstract void attaquer(Personnage adversaire);
-    public abstract void attaqueSpeciale(Personnage adversaire);
-    
-    // Méthode concrète commune à tous
-    public void subirDegats(int degats) {
-        // À implémenter
-    }
-    
-    // Méthodes utilitaires
-    public boolean estEnVie() {
-        return sante > 0;
-    }
-    
-    public void afficherEtat() {
-        System.out.printf("%s - HP: %d/%d | Mana: %d/%d%n", 
-            nom, sante, santeMaX, mana, manaMaX);
-    }
-}
-```
+**Attributs communs** :
+- `nom`, `sante`, `santeMaX`, `mana`, `manaMaX`, `force`
+
+**Méthodes abstraites** (à implémenter dans chaque sous-classe) :
+- `attaquer(Personnage adversaire)` : attaque normale
+- `attaqueSpeciale(Personnage adversaire)` : attaque spéciale qui coûte du mana
+
+**Méthodes concrètes** (communes à tous) :
+- `subirDegats(int degats)` : réduit la santé
+- `estEnVie()` : retourne true si santé > 0
+- `afficherEtat()` : affiche HP et Mana actuels
 
 ### 2. Sous-classes concrètes
 
-#### `Guerrier.java`
-- Attaque normale : dégâts = force + random(1-10)
-- Coup spécial "Rage" : dépense 30 mana, dégâts = force × 2
+#### `Guerrier`
+- **Attaque normale** : dégâts = force + aléatoire(1-10)
+- **Coup spécial "Rage"** : coûte 30 mana, dégâts = force × 2
 
-#### `Magicien.java`
-- Attaque normale : dégâts = force / 2 (faible)
-- Sort "Boule de feu" : dépense 40 mana, dégâts = force × 3
+#### `Magicien`
+- **Attaque normale** : dégâts = force / 2 (faible)
+- **Sort "Boule de feu"** : coûte 40 mana, dégâts = force × 3
 
-#### `Archer.java`
-- Attaque normale : dégâts = force avec 20% de chance de coup critique (×2)
-- Attaque spéciale "Tir groupé" : dépense 25 mana, 3 flèches (3 attaques normales)
+#### `Archer`
+- **Attaque normale** : dégâts = force avec 20% de chance de coup critique (×2)
+- **Attaque spéciale "Tir groupé"** : coûte 25 mana, lance 3 flèches (3 attaques normales)
 
-#### `Chevalier.java`
-- Attaque normale : dégâts = force
-- Compétence "Bouclier" : dépense 20 mana, réduit tous les dégâts reçus de 50% pendant le prochain tour
+#### `Chevalier`
+- **Attaque normale** : dégâts = force
+- **Compétence "Bouclier"** : coûte 20 mana, réduit les dégâts reçus de 50% le tour suivant
 
 ---
 
 ## ✅ Exigences d'implémentation
 
-1. **Encapsulation** : tous les attributs `protected` ou `private` avec getters/setters si nécessaire
+1. **Encapsulation** : tous les attributs `protected` ou `private` avec getters si nécessaire
 
-2. **Exception personnalisée** : créer `ManaNonDisponibleException` 
+2. **Exception personnalisée `ManaNonDisponibleException`** :
    - Levée quand on essaie d'utiliser une attaque spéciale sans assez de mana
+   - Le constructeur peut afficher le nom du personnage et combien de mana il manque
 
-3. **Polymorphisme** : une méthode `simulerCombat(Personnage p1, Personnage p2)` 
+3. **Polymorphisme en action** : une méthode `simulerCombat(Personnage p1, Personnage p2)`
    - Qui appelle `attaquer()` sur chaque combattant à tour de rôle
    - Sans connaître leur type exact (utiliser le type `Personnage`)
+   - Les deux combattants s'attaquent à tour de rôle jusqu'à ce que l'un meure
 
-4. **Méthode `toString()`** : affichage clair du personnage
-
----
-
-## 🎮 Classe principale : `SimulateurCombat.java`
-
-```java
-public class SimulateurCombat {
-    public static void main(String[] args) {
-        // Créer des personnages
-        Guerrier guerrier = new Guerrier("Aragorn", 100, 50, 15);
-        Magicien magicien = new Magicien("Gandalf", 70, 80, 10);
-        Archer archer = new Archer("Legolas", 80, 40, 12);
-        Chevalier chevalier = new Chevalier("Boromir", 110, 60, 14);
-        
-        // Combat : Guerrier vs Magicien
-        System.out.println("=== COMBAT : Guerrier vs Magicien ===\n");
-        simulerCombat(guerrier, magicien);
-    }
-    
-    public static void simulerCombat(Personnage p1, Personnage p2) {
-        int tour = 1;
-        
-        while (p1.estEnVie() && p2.estEnVie()) {
-            System.out.printf("\n--- Tour %d ---\n", tour);
-            
-            // Attaque de p1
-            System.out.printf("%s attaque !\n", p1.getNom());
-            p1.attaquer(p2);
-            p2.afficherEtat();
-            
-            if (!p2.estEnVie()) break;
-            
-            // Attaque de p2
-            System.out.printf("%s contre-attaque !\n", p2.getNom());
-            p2.attaquer(p1);
-            p1.afficherEtat();
-            
-            tour++;
-        }
-        
-        System.out.printf("\n🏆 %s a gagné !\n", 
-            p1.estEnVie() ? p1.getNom() : p2.getNom());
-    }
-}
-```
+4. **Méthode `toString()`** : affichage clair du personnage (nom, stats actuelles)
 
 ---
 
 ## 💡 Challenges supplémentaires (une fois les bases faites)
 
-1. **Interface `Defenseur`** : certains personnages peuvent bloquer
-   ```java
-   public interface Defenseur {
-       int bloquer();
-       void mettreEnGarde();
-   }
-   ```
+1. **Interface `Defenseur`** : certains personnages (Chevalier) peuvent implémenter une interface avec la méthode `bloquer()` pour réduire les dégâts
 
 2. **Système de niveaux** : augmenter les stats après chaque victoire
 
 3. **Inventaire d'équipement** : armes qui augmentent la force, armures qui réduisent les dégâts
 
-4. **Tours de combat plus réalistes** : alternance qui n'attend pas que quelqu'un meure
+4. **Tours de combat plus réalistes** : le joueur peut choisir entre `attaquer()` et `attaqueSpeciale()` chaque tour
 
 5. **Statistiques** : tracker les dégâts totaux, attaques totales, taux de coup critique réel
 
@@ -186,7 +113,7 @@ public class SimulateurCombat {
 ✅ Exceptions personnalisées  
 ✅ Réutilisation de code (méthodes communes)  
 ✅ `super` (appeler le constructeur parent)  
-✅ Surcharge vs Redéfinition (override)  
+✅ Surcharge vs Redéfinition (override)
 
 ---
 
