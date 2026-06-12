@@ -1,5 +1,3 @@
-import java.sql.SQLOutput;
-
 public abstract class Personnage {
     protected String nom;
     protected int HP;
@@ -17,11 +15,19 @@ public abstract class Personnage {
         this.force = force;
     }
 
+
     public abstract void attaquer(Personnage adversaire);
 
     public abstract void attaqueSpe (Personnage adversaire) throws ManaDispoException;
 
     public void subirDegats(int degats) {
+        if (this instanceof Chevalier chevalier){
+            if (chevalier.getBouclier()){
+                degats = degats/2;
+                chevalier.setBouclier(false);
+                System.out.println(nom + " bloque avec son bouclier ");
+            }
+        }
         HP -= degats;
     }
 
