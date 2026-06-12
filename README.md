@@ -11,17 +11,18 @@
 
 ## 📋 Contexte du Projet
 
-Tu dois créer un système de combat pour un RPG simplifié. Les différents personnages ont des attaques différentes, mais tous suivent la même logique de combat.
+Tu dois créer un système de combat pour un RPG simplifié. Les différents personnages ont des attaques différentes, 
+mais tous suivent la même logique de combat.
 
 ### Comportements attendus :
 - **Guerrier** : attaque normale (dégâts fixes) + coup spécial (rage) qui augmente les dégâts
-- **Magicien** : attaque faible mais peut lancer un sort coûteux (beaucoup de dégâts)
+- **Magicien** : attaque faible, mais peut lancer un sort coûteux (beaucoup de dégâts)
 - **Archer** : attaque moyenne avec probabilité de coup critique
 - **Chevalier** : peut bloquer les attaques (réduit les dégâts reçus)
 
 Tous les personnages ont :
 - Une santé (HP)
-- Une mana/énergie pour les attaques spéciales
+- Un mana/énergie pour les attaques spéciales
 - Une capacité à attaquer et subir des dégâts
 
 ---
@@ -47,19 +48,19 @@ C'est le **contrat de base** pour tous les combattants.
 
 #### `Guerrier`
 - **Attaque normale** : dégâts = force + aléatoire(1-10)
-- **Coup spécial "Rage"** : coûte 30 mana, dégâts = force × 2
+- **Coup spécial "Rage"** : coûte 30 manas, dégâts = force × 2
 
 #### `Magicien`
 - **Attaque normale** : dégâts = force / 2 (faible)
-- **Sort "Boule de feu"** : coûte 40 mana, dégâts = force × 3
+- **Sort "Boule de feu"** : coûte 40 manas, dégâts = force × 3
 
 #### `Archer`
 - **Attaque normale** : dégâts = force avec 20% de chance de coup critique (×2)
-- **Attaque spéciale "Tir groupé"** : coûte 25 mana, lance 3 flèches (3 attaques normales)
+- **Attaque spéciale "Tir groupé"** : coûte 25 manas, lance 3 flèches (3 attaques normales)
 
 #### `Chevalier`
 - **Attaque normale** : dégâts = force
-- **Compétence "Bouclier"** : coûte 20 mana, réduit les dégâts reçus de 50% le tour suivant
+- **Compétence "Bouclier"** : coûte 20 manas, réduit les dégâts reçus de 50% le tour suivant
 
 ---
 
@@ -69,7 +70,7 @@ C'est le **contrat de base** pour tous les combattants.
 
 2. **Exception personnalisée `ManaNonDisponibleException`** :
    - Levée quand on essaie d'utiliser une attaque spéciale sans assez de mana
-   - Le constructeur peut afficher le nom du personnage et combien de mana il manque
+   - Le constructeur peut afficher le nom du personnage et combien de mana, il manque
 
 3. **Polymorphisme en action** : une méthode `simulerCombat(Personnage p1, Personnage p2)`
    - Qui appelle `attaquer()` sur chaque combattant à tour de rôle
@@ -90,7 +91,7 @@ C'est le **contrat de base** pour tous les combattants.
 
 4. **Tours de combat plus réalistes** : le joueur peut choisir entre `attaquer()` et `attaqueSpeciale()` chaque tour
 
-5. **Statistiques** : tracker les dégâts totaux, attaques totales, taux de coup critique réel
+5. **statistiques** : tracker les dégâts totaux, attaques totales, taux de coup critique réel
 
 ---
 
